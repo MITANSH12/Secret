@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Language Converter</title>
+</head>
+<body>
+
+<h1>Secret Language Converter</h1>
+
+<form id="textForm">
+    <label for="textInput">Enter Text:</label>
+    <textarea id="textInput" rows="4" cols="50"></textarea>
+    <br>
+    <button type="button" onclick="encodeText()">Encode to Secret Language</button>
+    <button type="button" onclick="decodeText()">Decode from Secret Language</button>
+</form>
+
+<p id="result"></p>
+
+<script>
+function encodeText() {
+    var inputText = document.getElementById("textInput").value;
+    var secretLanguage = encodeToSecretLanguage(inputText);
+    document.getElementById("result").innerHTML = <strong>Encoded:</strong> ${secretLanguage};
+}
+
+function decodeText() {
+    var secretLanguage = document.getElementById("textInput").value;
+    var decodedText = decodeFromSecretLanguage(secretLanguage);
+    document.getElementById("result").innerHTML = <strong>Decoded:</strong> ${decodedText};
+}
+
+function encodeToSecretLanguage(text) {
+    var secretLanguage = '';
+    for (var i = 0; i < text.length; i++) {
+        var char = text[i];
+        if (char.match(/[a-zA-Z]/)) {
+            secretLanguage += (char.toLowerCase().charCodeAt(0) - 'a'.charCodeAt(0) + 1);
+            if (i < text.length - 1 && text[i + 1].match(/[a-zA-Z]/)) {
+                secretLanguage += '.';
+            }
+ } else if (char === ' ') {
+            secretLanguage += ' ';
+        } else {
+            secretLanguage += char;
+        }
+    }
+    return secretLanguage.trim();
+}
+
+function decodeFromSecretLanguage(secretLanguage) {
+    var decodedText = '';
+    var parts = secretLanguage.split(' ');
+    for (var i = 0; i < parts.length; i++) {
+        var part = parts[i];
+        if (part.charAt(0) === '@') {
+            part = part.substring(1);
+            var nums = part.split('.');
+            for (var j = 0; j < nums.length; j++) {
+                if (nums[j]) {
+                    decodedText += String.fromCharCode(parseInt(nums[j]) + 'a'.charCodeAt(0) - 1);
+                }
+            }
+        } else {
+            var nums = part.split('.');
+            for (var j = 0; j < nums.length; j++) {
+                if (nums[j]) {
+                    decodedText += String.fromCharCode(parseInt(nums[j]) + 'a'.charCodeAt(0) - 1);
+                }
+            }
+        }
+        if (i < parts.length - 1) {
+            decodedText += ' ';
+        }
+    }
+    return decodedText;
+}
+</script>
+
+</body>
+</html>
